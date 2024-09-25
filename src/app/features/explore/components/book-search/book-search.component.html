@@ -1,0 +1,315 @@
+<div
+  id="toast"
+  class="hidden fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg transition-transform transform"
+>
+  Book saved!
+</div>
+<div
+  *ngIf="!bookContent.length"
+  class="flex flex-col items-center justify-center p-4 bg-[#1e73be] h-minus-navbar"
+>
+  <div class="text-center mb-6">
+    <h1 class="text-[55px] font-bold text-white mb-2">
+      Explore All Gutenberg Books
+    </h1>
+    <p class="text-lg mt-6 text-white">
+      Enter a Book ID to find and read classic literature freely available from
+      Project Gutenberg.
+    </p>
+  </div>
+
+  <div class="relative w-full max-w-xl">
+    <input
+      type="text"
+      [(ngModel)]="bookId"
+      placeholder="Enter Book ID"
+      (keydown.enter)="fetchBook()"
+      class="border-2 border-gray-300 rounded-lg p-3 w-full pr-12 text-lg"
+    />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 mt-2 absolute right-4 top-2 text-gray-500 cursor-pointer"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      (click)="fetchBook()"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 2a8 8 0 016.32 12.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"
+      />
+    </svg>
+  </div>
+</div>
+
+<div *ngIf="bookContent.length" class="bg-[#1e73be] p-[50px]">
+  <div class="relative w-full max-w-sm">
+    <input
+      type="text"
+      [(ngModel)]="bookId"
+      placeholder="Enter Book ID"
+      (keydown.enter)="fetchBook()"
+      class="border-2 border-gray-300 rounded p-2 w-full pr-10"
+    />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 absolute right-2 top-2 text-gray-500"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 2a8 8 0 016.32 12.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"
+      />
+    </svg>
+  </div>
+
+  <div
+    *ngIf="title || author || summary || imageUrl"
+    class="mt-6 flex justify-between items-center"
+  >
+    <div class="w-[65%]">
+      <h1 class="text-[55px] font-bold mb-2 text-white">{{ title }}</h1>
+      <div class="flex items-center justify-between">
+        <p class="text-[25px] font-semibold mb-4 text-white">{{ author }}</p>
+
+        <!-- <svg
+          (click)="saveBook(bookId)"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="h-[45px] w-[45px] h cursor-pointer text-gray-500 p-4 bg-white rounded-[10px] shadow-md"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          id="save"
+        >
+          <path
+            d="M16,2H8C6.3438721,2.0018311,5.0018311,3.3438721,5,5v16.5c0.0001221,0.0870972,0.0230103,0.1727295,0.0663452,0.248291C5.2039795,21.9882202,5.5100708,22.071167,5.75,21.9335938L12,18.3339844l6.25,3.5996094C18.3262329,21.9768677,18.4123535,21.9997559,18.5,22c0.2759399-0.0004883,0.4995117-0.2240601,0.5-0.5V5C18.9981689,3.3438721,17.6561279,2.0018311,16,2z M18,20.6347656l-5.75-3.3115234c-0.0762329-0.0432739-0.1623535-0.0661621-0.25-0.0664062c-0.0876465,0.0002441-0.1737671,0.0231323-0.25,0.0664062L6,20.6347656V5c0.0014038-1.1040039,0.8959961-1.9985962,2-2h8c1.1040039,0.0014038,1.9985962,0.8959961,2,2V20.6347656z"
+          ></path>
+        </svg> -->
+
+        <svg
+          (click)="saveBook(bookId)"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="h-[45px] w-[45px] cursor-pointer text-gray-500 p-4 bg-white rounded-[10px] shadow-md"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          id="save"
+        >
+          <path
+            *ngIf="!isBookSaved"
+            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"
+          ></path>
+          <path
+            *ngIf="isBookSaved"
+            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z"
+            fill="black"
+          ></path>
+
+        </svg>
+      </div>
+
+      <p class="text-gray-700 text-[22px] leading-relaxed text-white">
+        {{ summary }}
+      </p>
+    </div>
+    <div class="mx-auto">
+      <img
+        [src]="imageUrl"
+        alt="Book Cover"
+        class="w-48 h-auto mb-4 rounded-md shadow-md"
+      />
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="flex justify-center items-center p-4">
+  <div
+    class="animate-spin h-8 w-8 border-t-4 border-blue-500 rounded-full"
+  ></div>
+</div>
+
+<!-- Tabs -->
+<div class="mt-6 mx-auto" *ngIf="bookContent.length">
+  <div class="flex space-x-4 border-b border-gray-200">
+    <button
+      (click)="activeTab = 'content'"
+      [class]="{
+        'text-blue-500': activeTab === 'content',
+        'text-gray-600': activeTab !== 'content'
+      }"
+      class="py-2 px-4 font-medium"
+    >
+      Introduction
+    </button>
+    <button
+      (click)="activeTab = 'analysis-characters'"
+      [class]="{
+        'text-blue-500': activeTab === 'analysis-characters',
+        'text-gray-600': activeTab !== 'analysis-characters'
+      }"
+      class="py-2 px-4 font-medium"
+    >
+      Identify key characters
+    </button>
+    <button
+      (click)="activeTab = 'analysis-sentiment'"
+      [class]="{
+        'text-blue-500': activeTab === 'analysis-sentiment',
+        'text-gray-600': activeTab !== 'analysis-sentiment'
+      }"
+      class="py-2 px-4 font-medium"
+    >
+      Sentiment Analysis
+    </button>
+    <button
+      (click)="activeTab = 'analysis-summary'"
+      [class]="{
+        'text-blue-500': activeTab === 'analysis-summary',
+        'text-gray-600': activeTab !== 'analysis-summary'
+      }"
+      class="py-2 px-4 font-medium"
+    >
+      Summary
+    </button>
+  </div>
+
+  <div class="p-4">
+    <div *ngIf="activeTab === 'content'">
+      <div
+        *ngIf="!title && !author && !summary && !imageUrl && bookMetadataEmpty"
+        class="mt-6"
+      >
+        <p class="text-red-500">Unable to extract book metadata.</p>
+      </div>
+
+      <div *ngIf="bookContent" class="p-4">
+        <pre>{{ bookContent }}</pre>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'analysis-characters'">
+      <div *ngIf="isLoading" class="flex justify-center items-center p-4">
+        <div
+          class="animate-spin h-8 w-8 border-t-4 border-blue-500 rounded-full"
+        ></div>
+      </div>
+      <div *ngIf="analysisResults" class="p-4 bg-gray-50 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+          Analysis Results
+        </h3>
+        <table class="min-w-full divide-y divide-gray-200 bg-white">
+          <thead class="bg-gray-100">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Entity
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Type
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Confidence Score
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Description
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let result of analysisResults.result">
+              <td class="px-6 py-4 whitespace-nowrap">{{ result.word }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{
+                  result.entity_group === "MISC"
+                    ? "Miscellaneous"
+                    : result.entity_group
+                }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ (result.score * 100).toFixed(1) }}%
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ getDescription(result.entity_group) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'analysis-sentiment'">
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="flex justify-center items-center p-4">
+        <div
+          class="animate-spin h-8 w-8 border-t-4 border-blue-500 rounded-full"
+        ></div>
+      </div>
+
+      <!-- Sentiment Analysis Results -->
+      <div
+        *ngIf="!isLoading && sentimentAnalysisResults"
+        class="p-4 bg-gray-50 rounded-lg shadow-md"
+      >
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+          Sentiment Analysis Results
+        </h3>
+
+        <div
+          *ngFor="let sentiment of sentimentAnalysisResults.result[0]"
+          class="mb-4"
+        >
+          <div class="flex items-center space-x-4">
+            <span
+              class="block px-4 py-2 text-white rounded-md"
+              [ngClass]="
+                sentiment.label === 'NEGATIVE' ? 'bg-red-500' : 'bg-green-500'
+              "
+            >
+              {{ sentiment.label === "NEGATIVE" ? "Negative" : "Positive" }}
+            </span>
+            <span class="block text-gray-600 text-sm">
+              Confidence: {{ (sentiment.score * 100).toFixed(2) }}%
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'analysis-summary'">
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="flex justify-center items-center p-4">
+        <div
+          class="animate-spin h-8 w-8 border-t-4 border-blue-500 rounded-full"
+        ></div>
+      </div>
+
+      <!-- Summary Results -->
+      <div
+        *ngIf="!isLoading && summaryResults"
+        class="p-4 bg-gray-50 rounded-lg shadow-md"
+      >
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+          Summary Results
+        </h3>
+        <p class="text-gray-700 leading-relaxed">
+          {{ summaryResults.result[0]?.summary_text }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

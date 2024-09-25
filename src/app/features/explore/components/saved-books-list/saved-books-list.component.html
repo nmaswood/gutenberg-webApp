@@ -1,0 +1,55 @@
+<div *ngIf="savedBooksArray.length > 0" class="p-4">
+    <h2 class="font-bold text-xl mb-4">Saved Books</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div
+        *ngFor="let book of savedBooksArray"
+        (click)="viewSavedBook(book)"
+        class="bg-white shadow-md rounded-lg overflow-hidden p-4 flex flex-col justify-between cursor-pointer"
+      >
+        <!-- Book Metadata -->
+        <img
+          [src]="book.metadata.image"
+          alt="{{ book.metadata.title }}"
+          class="h-48 w-full object-cover rounded-md mb-4"
+        />
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ book.metadata.title }}</h3>
+          <p class="text-gray-600 mb-4">by {{ book.metadata.author }}</p>
+        </div>
+  
+        <!-- Button to view more -->
+        <button
+          class="bg-blue-500 text-white rounded p-2 mt-auto hover:bg-blue-600 transition-colors duration-200"
+        >
+          View Book
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- If no saved books -->
+  <div *ngIf="savedBooksArray.length === 0" class="p-4">
+    <p>No saved books yet.</p>
+  </div>
+  
+  <!-- Modal for viewing book details -->
+  <ng-container *ngIf="selectedBook">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center overflow-y-auto">
+      <div class="bg-white p-6 rounded shadow-lg max-w-2xl w-full max-h-[90vh] overflow-auto">
+        <!-- Book Title and Author -->
+         <div class="flex items-start justify-between">
+            <h2 class="text-xl font-bold mb-4">{{ selectedBook.metadata.title }}</h2> 
+            <button class="text-black rounded p-2" (click)="closeModal()">X</button>
+         </div>
+
+        <p class="text-gray-600 mb-4">by {{ selectedBook.metadata.author }}</p>
+        
+        <!-- Book Content Display (Scrollable inside modal) -->
+        <div class="mt-4">
+          <h3 class="font-bold">Book Content</h3>
+          <p class="text-gray-800">{{ selectedBook.content }}</p>
+        </div>
+  
+      </div>
+    </div>
+  </ng-container>
